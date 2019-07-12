@@ -2,8 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Pre-Requisites
 
-Node.js >= 8.10
-
+Node.js >= 8.10 <br>
 npm >= 5.6
 
 run npm start in the project folder and open http://example.com:3000 in the browser to start the app.

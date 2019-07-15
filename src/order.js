@@ -24,6 +24,9 @@ function AddProduct(props) {
           <option value={prod.product_id} key={prod.product_id + i}>
             {prod.product_name}
           </option>
+          /*<option value={prod[1]} key={prod[1] + i}>
+            {prod[0]}
+          </option>*/
         ))}
       </select>
       <input
@@ -38,19 +41,9 @@ function AddProduct(props) {
 }
 
 export default class OrderForm extends React.Component {
-  state = {
-    num: 1,
-    chidren: [],
-    isLoaded: false,
-    customer_id: null,
-    Authorization: null,
-    loader: true,
-    success: true,
-    activeKey: "products"
-  };
   constructor(props) {
     super(props);
-    const urlProducts =
+    /* const urlProducts =
       "https://sapient3-evaluation-dw.demandware.net/s/Sites-SiteGenesis-Site/dw/shop/v16_6/product_search?q=clothes&client_id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     fetch(proxyurl + urlProducts, {
       method: "GET",
@@ -97,26 +90,55 @@ export default class OrderForm extends React.Component {
         this.setState({
           chidren: [<AddProduct remProducts={hits} key={1} />]
         });
-      });
+      });*/
+    let p = [
+      { product_id: 701643571277, product_name: "Sleeveless Cowl Neck Top" },
+      { product_id: 701642853695, product_name: "Quilted Jacket" },
+      {
+        product_id: 701644336240,
+        product_name: "Floral Black and White Dress"
+      },
+      { product_id: 701643408986, product_name: "Classic Jacket" },
+      { product_id: 701642889243, product_name: "Belted Cardigan" },
+      { product_id: 701643409006, product_name: "V-Neck Jacket" },
+      { product_id: 701644388829, product_name: "Straight Leg Pant" },
+      { product_id: 750518703299, product_name: "Black Flat Front Wool Suit" },
+      { product_id: 883360511054, product_name: "Modern Blazer" },
+      { product_id: 883360525419, product_name: "Slim Fit Pants" }
+    ];
+
+    this.state = {
+      num: 1,
+      isLoaded: false,
+      customer_id: null,
+      Authorization: null,
+      loader: true,
+      success: true,
+      activeKey: "products",
+      count: 10,
+      products: Array.from(p),
+
+      chidren: [<AddProduct remProducts={p} key={1} />]
+    };
   }
 
   handleClick() {
     if (this.state.num < this.state.count) {
-      let prods = this.state.hits;
+      let prods = Array.from(this.state.products);
 
-      /* for (let j = 1; j < i; j++) {
+      for (let j = 1; j < i; j++) {
         var p = document.getElementById("ps" + j).value;
         console.log(p);
         //let idx = prods.indexOf(p);
         let idx = prods.findIndex(ele => ele.product_id == p);
         prods.splice(idx, 1);
       }
-      */
 
-      let p = document.getElementById("ps" + (i - 1)).value;
+      /* let p = document.getElementById("ps" + (i - 1)).value;
       // let idx = prods.indexOf(p);
       let idx = prods.findIndex(ele => ele.product_id == p);
-      prods.splice(idx, 1);
+      // let idx = _.findIndex(prods, ele => ele[1] == p);
+      prods.splice(idx, 1);*/
 
       this.setState({ num: this.state.num + 1 });
       this.state.chidren.push(<AddProduct remProducts={prods} key={i} />);

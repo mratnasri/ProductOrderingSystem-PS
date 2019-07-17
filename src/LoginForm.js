@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import FormElement from "./FormElement";
 import SubmitButton from "./SubmitButton";
 import OrderForm from "./order";
+import GoogleLogin from "react-google-login";
+//import FacebookLogin from "react-facebook-login";
 //import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 
 export default class LoginForm extends React.Component {
@@ -13,6 +15,17 @@ export default class LoginForm extends React.Component {
       isLoggedIn: false
     };
   }
+  validResponse = response => {
+    //console.log(response);
+    this.setState({ isLoggedIn: true });
+    var ret = <OrderForm />;
+    ReactDOM.render(ret, document.getElementById("root"));
+  };
+
+  invalidResponse = response => {
+    document.getElementById("lmsg").innerHTML =
+      '<font color = "red"> Invalid Login! </font>';
+  };
 
   submitHandler = event => {
     event.preventDefault();
@@ -46,6 +59,18 @@ export default class LoginForm extends React.Component {
           <FormElement label="Password" type="password" id="lpass" />
           <SubmitButton id="lsubmit" value="Login" />
         </form>
+        <center>OR Login via google </center>
+        <div className="form-group row">
+          <div className="control-label col-sm-4"> </div>
+          <GoogleLogin
+            className="btn btn-primary"
+            clientId="303007412789-p2igmujsav2hr59dp23r0dqhr9pvpivk.apps.googleusercontent.com"
+            buttonText="Login"
+            onSuccess={this.validResponse}
+            onFailure={this.invalidResponse}
+            cookiePolicy={"single_host_origin"}
+          />
+        </div>
       </React.Fragment>
     );
   }

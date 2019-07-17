@@ -128,7 +128,7 @@ export default class OrderForm extends React.Component {
 
       for (let j = 1; j < i; j++) {
         var p = document.getElementById("ps" + j).value;
-        console.log(p);
+        //console.log(p);
         //let idx = prods.indexOf(p);
         let idx = prods.findIndex(ele => ele.product_id == p);
         prods.splice(idx, 1);

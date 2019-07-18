@@ -25,6 +25,7 @@ export default class LoginForm extends React.Component {
   invalidResponse = response => {
     document.getElementById("lmsg").innerHTML =
       '<font color = "red"> Invalid Login! </font>';
+    console.log(response);
   };
 
   submitHandler = event => {
@@ -69,6 +70,7 @@ export default class LoginForm extends React.Component {
             onSuccess={this.validResponse}
             onFailure={this.invalidResponse}
             cookiePolicy={"single_host_origin"}
+            autoLoad={false}
           />
         </div>
       </React.Fragment>

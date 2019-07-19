@@ -7,7 +7,7 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 //import axios from "axios";
 
-var i = 1;
+//let i = 1;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
 function AddProduct(props) {
@@ -16,12 +16,13 @@ function AddProduct(props) {
       <div className="col-sm-4" />
       <select
         className="control-label col-sm-2"
-        key={i.toString()}
-        id={"ps" + i}
-        htmlFor={"pq" + i}
+        key={props.i.toString()}
+        id={"ps" + props.i}
+        name={"ps" + props.i}
+        htmlFor={"pq" + props.i}
       >
         {props.remProducts.map(prod => (
-          <option value={prod.product_id} key={prod.product_id + i}>
+          <option value={prod.product_id} key={prod.product_id + props.i}>
             {prod.product_name}
           </option>
           /*<option value={prod[1]} key={prod[1] + i}>
@@ -33,7 +34,8 @@ function AddProduct(props) {
         className="form-control col-sm-1"
         type="number"
         placeholder="Quantity"
-        id={"pq" + i++}
+        id={"pq" + props.i}
+        name={"pq" + props.i}
         required
       />
     </div>
@@ -118,7 +120,33 @@ export default class OrderForm extends React.Component {
       count: 10,
       products: Array.from(p),
 
-      chidren: [<AddProduct remProducts={p} key={1} />]
+      chidren: [<AddProduct remProducts={p} key={1} i={1} />],
+
+      obfname: null,
+      oblname: null,
+      obphone: null,
+      obemail: null,
+      obaddress: null,
+      obcity: null,
+      obstate: null,
+      obcountry: null,
+      obpin: null,
+
+      osfname: null,
+      oslname: null,
+      osphone: null,
+      osemail: null,
+      osaddress: null,
+      oscity: null,
+      osstate: null,
+      oscountry: null,
+      ospin: null,
+
+      opname: null,
+      opcard: null,
+      opmm: null,
+      opyy: null,
+      opcvv: null
     };
   }
 
@@ -126,8 +154,8 @@ export default class OrderForm extends React.Component {
     if (this.state.num < this.state.count) {
       let prods = Array.from(this.state.products);
 
-      for (let j = 1; j < i; j++) {
-        var p = document.getElementById("ps" + j).value;
+      for (let j = 1; j < this.state.num; j++) {
+        let p = document.getElementById("ps" + j).value;
         //console.log(p);
         //let idx = prods.indexOf(p);
         let idx = prods.findIndex(ele => ele.product_id == p);
@@ -141,7 +169,13 @@ export default class OrderForm extends React.Component {
       prods.splice(idx, 1);*/
 
       this.setState({ num: this.state.num + 1 });
-      this.state.chidren.push(<AddProduct remProducts={prods} key={i} />);
+      this.state.chidren.push(
+        <AddProduct
+          remProducts={prods}
+          key={this.state.num}
+          i={this.state.num}
+        />
+      );
       //return(<addProduct remProducts={prods}/>)
       //return(this.AddProduct(prods));
       //this.render();
@@ -205,13 +239,14 @@ export default class OrderForm extends React.Component {
 
   prods = async () => {
     var result = await [this.addProdBasket(1)];
-    for (let j = 2; j < i; j++) {
+    let i = this.state.num;
+    for (var j = 2; j < i; j++) {
       await result[j - 2];
       result[j - 1] = this.addProdBasket(j);
       //console.log(await result[j - 1]);
     }
 
-    return result[i - 2];
+    return result[j - 2];
   };
 
   submitHandler = async event => {
@@ -253,6 +288,7 @@ export default class OrderForm extends React.Component {
     var res = await this.prods();
 
     await res;
+    // console.log("start" + res);
 
     //console.log(this.state.etag);
     /*fetch(proxyurl + url4, {
@@ -634,6 +670,11 @@ export default class OrderForm extends React.Component {
               Order Number is {this.state.OrderNo}
             </div>
           </div>
+          <center>
+            <button className="btn btn-primary" onClick={this.home}>
+              Home
+            </button>
+          </center>
         </React.Fragment>
       );
     } else {
@@ -648,6 +689,11 @@ export default class OrderForm extends React.Component {
             <div className="control-label col-sm-4"> </div>
             <div className="col-sm-4 ">Please try again later</div>
           </div>
+          <center>
+            <button className="btn btn-primary" onClick={this.home}>
+              Home
+            </button>
+          </center>
         </React.Fragment>
       );
     }
@@ -768,16 +814,50 @@ export default class OrderForm extends React.Component {
     //console.log(this.state.Authorization);
   }
 
+  home = () => {
+    let ret = <OrderForm />;
+    ReactDOM.render(ret, document.getElementById("root"));
+  };
   myChangeHandler = event => {
     let nam = event.target.id;
     let val = event.target.value;
+    //let pre = nam.slice(0, 2);
     this.setState({ [nam]: val });
-    // console.log(nam + ": " + val);
+
+    //console.log(nam + ": " + val);
   };
 
   changeTab = val => {
     this.setState({ activeKey: val });
     // this.render();
+  };
+
+  setShippingAddress = event => {
+    if (event.target.checked) {
+      this.setState({
+        osfname: this.state.obfname,
+        oslname: this.state.oblname,
+        osphone: this.state.obphone,
+        osemail: this.state.obemail,
+        osaddress: this.state.obaddress,
+        oscity: this.state.obcity,
+        osstate: this.state.obstate,
+        oscountry: this.state.obcountry,
+        ospin: this.state.obpin
+      });
+    } else {
+      this.setState({
+        osfname: null,
+        oslname: null,
+        osphone: null,
+        osemail: null,
+        osaddress: null,
+        oscity: null,
+        osstate: null,
+        oscountry: null,
+        ospin: null
+      });
+    }
   };
 
   render() {
@@ -790,217 +870,240 @@ export default class OrderForm extends React.Component {
     var Loader = require("react-loader");
     return (
       <React.Fragment>
-        <Tabs
-          activeKey={this.state.activeKey}
-          id="orderTabs"
-          onSelect={key => this.setState({ activeKey: key })}
-        >
-          <Tab eventKey="products" title="Products">
-            <br />
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <label className="control-label col-sm-4">
-                <b>Add Products</b>
-              </label>
-            </div>
+        <form className="form-horizontal" onSubmit={this.submitHandler}>
+          <Tabs
+            activeKey={this.state.activeKey}
+            id="orderTabs"
+            onSelect={key => this.setState({ activeKey: key })}
+          >
+            <Tab eventKey="products" title="Products">
+              <br />
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <label className="control-label col-sm-4">
+                  <b>Add Products</b>
+                </label>
+              </div>
 
-            <div id="prodDiv">{this.state.chidren}</div>
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <button
-                className="btn btn-primary"
-                type="button"
-                onClick={() => this.handleClick()}
-              >
-                Add Item
-              </button>
-            </div>
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <button
-                className="btn btn-primary"
-                type="button"
-                onClick={() => this.changeTab("billing")}
-              >
-                Next
-              </button>
-            </div>
-          </Tab>
-          <Tab eventKey="billing" title="Billing Address">
-            <br />
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <label className="control-label col-sm-4">
-                <b>Billing Address</b>
-              </label>
-            </div>
-            <FormElement
-              label="First Name"
-              type="text"
-              id="obfname"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Last Name"
-              type="text"
-              id="oblname"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Phone No."
-              type="number"
-              id="obphone"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Email Id"
-              type="email"
-              id="obemail"
-              onChange={this.myChangeHandler}
-            />
-            <div className="form-group row">
-              <label
-                className="control-label col-sm-4"
-                align="right"
-                htmlFor="obaddress"
-              >
-                Address :
-              </label>
-              <textarea
-                className="form-control col-sm-4"
-                id="obaddress"
-                placeholder="House no., street, locality"
+              <div id="prodDiv">{this.state.chidren}</div>
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.handleClick()}
+                >
+                  Add Item
+                </button>
+              </div>
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.changeTab("billing")}
+                >
+                  Next
+                </button>
+              </div>
+            </Tab>
+            <Tab eventKey="billing" title="Billing Address">
+              <br />
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <label className="control-label col-sm-4">
+                  <b>Billing Address</b>
+                </label>
+              </div>
+              <FormElement
+                label="First Name"
+                type="text"
+                id="obfname"
                 onChange={this.myChangeHandler}
               />
-            </div>
-            <FormElement
-              label="City"
-              type="text"
-              id="obcity"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="State"
-              type="text"
-              id="obstate"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Country"
-              type="text"
-              id="obcountry"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Pin Code"
-              type="number"
-              id="obpin"
-              onChange={this.myChangeHandler}
-            />
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <button
-                className="btn btn-primary"
-                type="button"
-                onClick={() => this.changeTab("shipping")}
-              >
-                Next
-              </button>
-            </div>
-          </Tab>
-          <Tab eventKey="shipping" title="Shipping Address">
-            <br />
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <label className="control-label col-sm-4">
-                <b>Shipping Address</b>
-              </label>
-            </div>
-            <FormElement
-              label="First Name"
-              type="text"
-              id="osfname"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Last Name"
-              type="text"
-              id="oslname"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Phone No."
-              type="number"
-              id="osphone"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Email Id"
-              type="email"
-              id="osemail"
-              onChange={this.myChangeHandler}
-            />
-            <div className="form-group row">
-              <label
-                className="control-label col-sm-4"
-                align="right"
-                htmlFor="osaddress"
-              >
-                Address :
-              </label>
-              <textarea
-                className="form-control col-sm-4"
-                id="osaddress"
-                placeholder="House no., street, locality"
+              <FormElement
+                label="Last Name"
+                type="text"
+                id="oblname"
                 onChange={this.myChangeHandler}
               />
-            </div>
-            <FormElement
-              label="City"
-              type="text"
-              id="oscity"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="State"
-              type="text"
-              id="osstate"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Country"
-              type="text"
-              id="oscountry"
-              onChange={this.myChangeHandler}
-            />
-            <FormElement
-              label="Pin Code"
-              type="number"
-              id="ospin"
-              onChange={this.myChangeHandler}
-            />
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <button
-                className="btn btn-primary"
-                type="button"
-                onClick={() => this.changeTab("payment")}
-              >
-                Next
-              </button>
-            </div>
-          </Tab>
-          <Tab eventKey="payment" title="Payment">
-            <br />
-            <div className="form-group row">
-              <div className="control-label col-sm-4"> </div>
-              <label className="control-label col-sm-4">
-                <b>Payment</b>
-                <br />
-                Enter Card Details:
-              </label>
-            </div>
-            <form className="form-horizontal" onSubmit={this.submitHandler}>
+              <FormElement
+                label="Phone No."
+                type="number"
+                id="obphone"
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Email Id"
+                type="email"
+                id="obemail"
+                onChange={this.myChangeHandler}
+              />
+              <div className="form-group row">
+                <label
+                  className="control-label col-sm-4"
+                  align="right"
+                  htmlFor="obaddress"
+                >
+                  Address :
+                </label>
+                <textarea
+                  className="form-control col-sm-4"
+                  id="obaddress"
+                  placeholder="House no., street, locality"
+                  onChange={this.myChangeHandler}
+                />
+              </div>
+              <FormElement
+                label="City"
+                type="text"
+                id="obcity"
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="State"
+                type="text"
+                id="obstate"
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Country"
+                type="text"
+                id="obcountry"
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Pin Code"
+                type="number"
+                id="obpin"
+                onChange={this.myChangeHandler}
+              />
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.changeTab("shipping")}
+                >
+                  Next
+                </button>
+              </div>
+            </Tab>
+            <Tab eventKey="shipping" title="Shipping Address">
+              <br />
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <label className="control-label col-sm-4">
+                  <b>Shipping Address</b>
+                </label>
+              </div>
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <div className="checkbox">
+                  <label>
+                    <input
+                      type="checkbox"
+                      id="obos"
+                      onChange={this.setShippingAddress}
+                    />
+                    Same as billing address
+                  </label>
+                </div>
+              </div>
+              <FormElement
+                label="First Name"
+                type="text"
+                id="osfname"
+                value={this.state.osfname}
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Last Name"
+                type="text"
+                id="oslname"
+                value={this.state.oslname}
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Phone No."
+                type="number"
+                id="osphone"
+                value={this.state.osphone}
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Email Id"
+                type="email"
+                id="osemail"
+                value={this.state.osemail}
+                onChange={this.myChangeHandler}
+              />
+              <div className="form-group row">
+                <label
+                  className="control-label col-sm-4"
+                  align="right"
+                  htmlFor="osaddress"
+                >
+                  Address :
+                </label>
+                <textarea
+                  className="form-control col-sm-4"
+                  id="osaddress"
+                  placeholder="House no., street, locality"
+                  value={this.state.osaddress ? this.state.osaddress : ""}
+                  onChange={this.myChangeHandler}
+                />
+              </div>
+              <FormElement
+                label="City"
+                type="text"
+                id="oscity"
+                value={this.state.oscity}
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="State"
+                type="text"
+                id="osstate"
+                value={this.state.osstate}
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Country"
+                type="text"
+                id="oscountry"
+                value={this.state.oscountry}
+                onChange={this.myChangeHandler}
+              />
+              <FormElement
+                label="Pin Code"
+                type="number"
+                id="ospin"
+                value={this.state.ospin}
+                onChange={this.myChangeHandler}
+              />
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.changeTab("payment")}
+                >
+                  Next
+                </button>
+              </div>
+            </Tab>
+            <Tab eventKey="payment" title="Payment">
+              <br />
+              <div className="form-group row">
+                <div className="control-label col-sm-4"> </div>
+                <label className="control-label col-sm-4">
+                  <b>Payment</b>
+                  <br />
+                  Enter Card Details:
+                </label>
+              </div>
+
               <FormElement
                 label="Name"
                 type="text"
@@ -1051,9 +1154,9 @@ export default class OrderForm extends React.Component {
               <Loader loaded={this.state.loader} className="spinner">
                 <SubmitButton id="osubmit" value="Order" />
               </Loader>
-            </form>
-          </Tab>
-        </Tabs>
+            </Tab>
+          </Tabs>
+        </form>
       </React.Fragment>
     );
   }

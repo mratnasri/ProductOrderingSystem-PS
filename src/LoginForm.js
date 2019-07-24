@@ -36,7 +36,7 @@ export default class LoginForm extends React.Component {
     } else {
       document.getElementById("lmsg").innerHTML =
         '<font color = "red"> Invalid Login! </font>';
-      console.log(result.error.message);
+      console.log(result);
     }
   };
 

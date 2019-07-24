@@ -6,7 +6,12 @@ export default function SubmitButton(props) {
   return (
     <div className="form-group row">
       <div className="control-label col-sm-4"> </div>
-      <button className="btn btn-primary" id={props.id} type="submit">
+      <button
+        className="btn btn-primary"
+        id={props.id}
+        type="submit"
+        disabled={props.disabled ? props.disabled : false}
+      >
         {props.value}
       </button>
     </div>

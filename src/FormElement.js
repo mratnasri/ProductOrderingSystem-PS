@@ -14,7 +14,7 @@ export default class FormElement extends React.Component {
 
   render() {
     return (
-      <div className="form-group row">
+      <div className="form-group row" id={this.props.id + "div"}>
         <label
           className="control-label col-sm-4"
           align="right"
@@ -28,6 +28,10 @@ export default class FormElement extends React.Component {
           id={this.props.id}
           name={this.props.id}
           defaultValue={this.props.value ? this.props.value : ""}
+          maxLength={this.props.maxLength ? this.props.maxLength : ""}
+          minLength={this.props.minLength ? this.props.minLength : ""}
+          min={this.props.min ? this.props.min : ""}
+          max={this.props.max ? this.props.max : ""}
           required
           onChange={this.props.onChange}
         />

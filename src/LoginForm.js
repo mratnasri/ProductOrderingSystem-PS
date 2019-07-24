@@ -5,7 +5,7 @@ import FormElement from "./FormElement";
 import SubmitButton from "./SubmitButton";
 import OrderForm from "./order";
 import GoogleLogin from "react-google-login";
-//import FacebookLogin from "react-facebook-login";
+import FacebookLogin from "react-facebook-login";
 //import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 
 export default class LoginForm extends React.Component {
@@ -18,7 +18,7 @@ export default class LoginForm extends React.Component {
   validResponse = response => {
     //console.log(response);
     this.setState({ isLoggedIn: true });
-    var ret = <OrderForm />;
+    var ret = <OrderForm loginType="google" />;
     ReactDOM.render(ret, document.getElementById("root"));
   };
 
@@ -26,6 +26,24 @@ export default class LoginForm extends React.Component {
     document.getElementById("lmsg").innerHTML =
       '<font color = "red"> Invalid Login! </font>';
     console.log(response);
+  };
+
+  responseFacebook = (error, result) => {
+    if (error) {
+      document.getElementById("lmsg").innerHTML =
+        '<font color = "red"> Login failed with error: ' +
+        error.message +
+        "</font>";
+      console.log(error);
+    } else if (result.isCancelled) {
+      document.getElementById("lmsg").innerHTML =
+        '<font color = "red"> Login was cancelled</font>';
+      console.log(result);
+    } else {
+      this.setState({ isLoggedIn: true });
+      var ret = <OrderForm loginType="facebook" />;
+      ReactDOM.render(ret, document.getElementById("root"));
+    }
   };
 
   submitHandler = event => {
@@ -39,7 +57,7 @@ export default class LoginForm extends React.Component {
       //document.getElementById('lmsg').innerHTML = '<font color = "green"> successfully logged in! </font>';
       //window.open('/order.html', '_self');
       this.setState({ isLoggedIn: true });
-      var ret = <OrderForm />;
+      var ret = <OrderForm loginType="normal" />;
       ReactDOM.render(ret, document.getElementById("root"));
     } else
       document.getElementById("lmsg").innerHTML =
@@ -60,17 +78,28 @@ export default class LoginForm extends React.Component {
           <FormElement label="Password" type="password" id="lpass" />
           <SubmitButton id="lsubmit" value="Login" />
         </form>
-        <center>OR Login via google </center>
+        <center>OR Social Login </center>
+        <br />
         <div className="form-group row">
           <div className="control-label col-sm-4"> </div>
           <GoogleLogin
             className="btn btn-primary"
             clientId="303007412789-p2igmujsav2hr59dp23r0dqhr9pvpivk.apps.googleusercontent.com"
-            buttonText="Login"
+            buttonText="google"
             onSuccess={this.validResponse}
             onFailure={this.invalidResponse}
             cookiePolicy={"single_host_origin"}
             autoLoad={false}
+          />
+          <pre> </pre>
+          <FacebookLogin
+            appId="2258971584140282"
+            autoLoad={false}
+            size="medium"
+            textButton="facebook"
+            fields="name,email,picture"
+            callback={this.responseFacebook}
+            data-auto-logout-link="true"
           />
         </div>
       </React.Fragment>

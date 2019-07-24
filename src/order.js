@@ -13,6 +13,29 @@ import LoginHOC from "react-facebook-login-hoc";
 //let i = 1;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
+window.fbAsyncInit = function() {
+  window.FB.init({
+    appId: "2258971584140282",
+    cookie: true,
+    xfbml: true,
+    version: "v3.3"
+  });
+
+  window.FB.AppEvents.logPageView();
+};
+
+(function(d, s, id) {
+  var js,
+    fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {
+    return;
+  }
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://connect.facebook.net/en_US/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);
+})(document, "script", "facebook-jssdk");
+
 function AddProduct(props) {
   return (
     <div className="form-group row">
@@ -717,7 +740,7 @@ export default class OrderForm extends React.Component {
   };
 
   logout = () => {
-    if (this.props.loginType == "facebook") this.props.fb.logout();
+    if (this.props.loginType == "facebook") window.FB.logout();
     ReactDOM.render(<LoginForm />, document.getElementById("root"));
   };
 

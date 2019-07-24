@@ -29,14 +29,14 @@ export default class LoginForm extends React.Component {
   };
 
   responseFacebook = result => {
-    if (result.error) {
-      document.getElementById("lmsg").innerHTML =
-        '<font color = "red"> Invalid Login! </font>';
-      console.log(result.error.message);
-    } else {
+    if (result.id) {
       this.setState({ isLoggedIn: true });
       var ret = <OrderForm loginType="facebook" />;
       ReactDOM.render(ret, document.getElementById("root"));
+    } else {
+      document.getElementById("lmsg").innerHTML =
+        '<font color = "red"> Invalid Login! </font>';
+      console.log(result.error.message);
     }
   };
 

@@ -28,19 +28,11 @@ export default class LoginForm extends React.Component {
     console.log(response);
   };
 
-  responseFacebook = (error, result) => {
-    console.log(error);
-    console.log(result);
-    if (error) {
+  responseFacebook = result => {
+    if (result.error) {
       document.getElementById("lmsg").innerHTML =
-        '<font color = "red"> Login failed with error: ' +
-        error.message +
-        "</font>";
-      console.log(error);
-    } else if (result.isCancelled) {
-      document.getElementById("lmsg").innerHTML =
-        '<font color = "red"> Login was cancelled</font>';
-      console.log(result);
+        '<font color = "red"> Invalid Login! </font>';
+      console.log(result.error.message);
     } else {
       this.setState({ isLoggedIn: true });
       var ret = <OrderForm loginType="facebook" />;

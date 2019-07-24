@@ -29,6 +29,8 @@ export default class LoginForm extends React.Component {
   };
 
   responseFacebook = (error, result) => {
+    console.log(error);
+    console.log(result);
     if (error) {
       document.getElementById("lmsg").innerHTML =
         '<font color = "red"> Login failed with error: ' +

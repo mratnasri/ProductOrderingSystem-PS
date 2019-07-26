@@ -35,6 +35,7 @@ export default class FormElement extends React.Component {
           required
           onChange={this.props.onChange}
         />
+        <div id={this.props.id + "err"} style={{ padding: 2 }} />
       </div>
     );
   }

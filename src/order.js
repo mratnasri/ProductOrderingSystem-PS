@@ -7,7 +7,6 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { GoogleLogout } from "react-google-login";
 import LoginForm from "./LoginForm";
-import LoginHOC from "react-facebook-login-hoc";
 //import axios from "axios";
 
 //let i = 1;
@@ -867,12 +866,14 @@ export default class OrderForm extends React.Component {
     let nam = event.target.id;
     let val = event.target.value;
     this.setState({ [nam]: val });
-    let status = this.validateField(nam, val);
+    let { status, errmsg } = this.validateField(nam, val);
+    let node = React.createElement("font", { color: "red" }, errmsg);
     if (status) {
       document.getElementById(nam).style.borderColor = "#ced4da";
     } else {
       document.getElementById(nam).style.borderColor = "red";
     }
+    ReactDOM.render(node, document.getElementById(nam + "err"));
   };
 
   changeTab = val => {
@@ -938,7 +939,7 @@ export default class OrderForm extends React.Component {
     } else if (type === "facebook") {
       logoutButton = (
         <button type="button" className="btn btn-primary" onClick={this.logout}>
-          Facebook Logout
+          Logout
         </button>
       );
     }
@@ -991,42 +992,70 @@ export default class OrderForm extends React.Component {
     let name = nam + "Valid";
     let value = true;
     let status = true;
+    let errmsg = null;
     if (nam.includes("name")) {
       value = alphaExp.test(val.trim());
       status = value;
+      if (!status) errmsg = "Please enter a valid name";
+      else errmsg = null;
     } else if (nam.includes("phone")) {
       value = !isNaN(val) && val.length == 10;
       status = value;
+      if (!status) errmsg = "Please enter a valid 10 digit phone no.";
+      else errmsg = null;
     } else if (nam.includes("email")) {
       value = emailExp.test(val);
       status = value;
+      if (!status) errmsg = "Please enter a valid email id";
+      else errmsg = null;
+    } else if (nam.includes("address")) {
+      value = val.trim().length > 0;
+      status = value;
+      if (!status) errmsg = "Address is required";
+      else errmsg = null;
     } else if (nam.includes("city")) {
       value = alphaExp.test(val.trim());
       status = value;
+      if (!status) errmsg = "Please enter a valid city";
+      else errmsg = null;
     } else if (nam.includes("state")) {
       value = alphaExp.test(val.trim());
       status = value;
+      if (!status) errmsg = "Please enter a valid state";
+      else errmsg = null;
     } else if (nam.includes("country")) {
       value = alphaExp.test(val.trim());
       status = value;
+      if (!status) errmsg = "Please enter a valid country";
+      else errmsg = null;
     } else if (nam.includes("pin")) {
-      value = !isNaN(val) && val.length == 6;
+      value = !isNaN(val) && val.trim().length == 6;
       status = value;
+      if (!status) errmsg = "Please enter a valid 6 digit pin code";
+      else errmsg = null;
     } else if (nam.includes("card")) {
       value = !isNaN(val) && val.length == 16;
       status = value;
+      if (!status) errmsg = "Please enter a valid 16 digit card number";
+      else errmsg = null;
     } else if (nam.includes("opmm")) {
       value = !isNaN(val) && val >= 1 && val <= 12;
       status = value;
+      if (!status) errmsg = "Please enter a valid month (1 to 12)";
+      else errmsg = null;
     } else if (nam.includes("opyy")) {
       value = !isNaN(val) && val.length == 4;
       status = value;
+      if (!status) errmsg = "Please enter a valid year (YYYY)";
+      else errmsg = null;
     } else if (nam.includes("opcvv")) {
       value = !isNaN(val) && val.length == 3;
       status = value;
+      if (!status) errmsg = "Please enter a valid 3 digit CVV";
+      else errmsg = null;
     }
     this.setState({ [name]: value });
-    return status;
+    return { status, errmsg };
   };
 
   render() {
@@ -1123,6 +1152,7 @@ export default class OrderForm extends React.Component {
                       required
                       onChange={this.myChangeHandler}
                     />
+                    <div id="obaddresserr" style={{ padding: 2 }} />
                   </div>
                   <FormElement
                     label="City"
@@ -1225,6 +1255,7 @@ export default class OrderForm extends React.Component {
                       value={this.state.osaddress ? this.state.osaddress : ""}
                       onChange={this.myChangeHandler}
                     />
+                    <div id="osaddresserr" style={{ padding: 2 }} />
                   </div>
                   <FormElement
                     label="City"
@@ -1324,6 +1355,9 @@ export default class OrderForm extends React.Component {
                       required
                       onChange={this.myChangeHandler}
                     />
+                    <div id="opmmerr" style={{ padding: 2 }} />
+                    <div id="opyyerr" style={{ padding: 2 }} />
+                    <div id="opcvverr" style={{ padding: 2 }} />
                   </div>
 
                   <Loader loaded={this.state.loader} className="spinner">

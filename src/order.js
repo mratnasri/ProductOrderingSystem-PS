@@ -138,7 +138,8 @@ export default class OrderForm extends React.Component {
     let logoutButton = this.setLogout();
 
     this.state = {
-      num: 1,
+      num: 2,
+      disabled: false,
       isLoaded: false,
       customer_id: null,
       Authorization: null,
@@ -189,7 +190,7 @@ export default class OrderForm extends React.Component {
   }
 
   handleClick() {
-    if (this.state.num < this.state.count) {
+    if (this.state.num <= this.state.count) {
       let prods = Array.from(this.state.products);
 
       for (let j = 1; j < this.state.num; j++) {
@@ -206,7 +207,6 @@ export default class OrderForm extends React.Component {
       // let idx = _.findIndex(prods, ele => ele[1] == p);
       prods.splice(idx, 1);*/
 
-      this.setState({ num: this.state.num + 1 });
       this.state.chidren.push(
         <AddProduct
           remProducts={prods}
@@ -214,9 +214,12 @@ export default class OrderForm extends React.Component {
           i={this.state.num}
         />
       );
+      this.setState({ num: this.state.num + 1 });
       //return(<addProduct remProducts={prods}/>)
       //return(this.AddProduct(prods));
       //this.render();
+    } else {
+      this.setState({ disabled: true });
     }
   }
 
@@ -1091,6 +1094,7 @@ export default class OrderForm extends React.Component {
                       className="btn btn-primary"
                       type="button"
                       onClick={() => this.handleClick()}
+                      disabled={this.state.disabled}
                     >
                       Add Item
                     </button>

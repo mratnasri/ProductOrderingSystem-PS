@@ -701,9 +701,14 @@ export default class OrderForm extends React.Component {
       ret = (
         <React.Fragment>
           <br />
-          <h1 align="center">
-            <font color="green"> Order Placed Succesfully! </font>
-          </h1>
+          <div className="form-group row">
+            <div className="col-sm-10">
+              <h1 align="center">
+                <font color="green"> Order Placed Succesfully! </font>
+              </h1>
+            </div>
+            <div className="col-sm-2">{this.state.logoutButton}</div>
+          </div>
           <br />
           <div className="form-group row">
             <div className="control-label col-sm-4"> </div>
@@ -722,9 +727,14 @@ export default class OrderForm extends React.Component {
       ret = (
         <React.Fragment>
           <br />
-          <h1 align="center">
-            <font color="red"> Sorry order could not be Placed! </font>
-          </h1>
+          <div className="form-group row">
+            <div className="col-sm-10">
+              <h1 align="center">
+                <font color="red"> Sorry order could not be Placed! </font>
+              </h1>
+            </div>
+            <div className="col-sm-2">{this.state.logoutButton}</div>
+          </div>
           <br />
           <div className="form-group row">
             <div className="control-label col-sm-4"> </div>
@@ -861,7 +871,8 @@ export default class OrderForm extends React.Component {
   }
 
   home = () => {
-    let ret = <OrderForm />;
+    let type = this.props.loginType;
+    let ret = <OrderForm loginType={type} />;
     ReactDOM.render(ret, document.getElementById("root"));
   };
 
@@ -1387,7 +1398,9 @@ export default class OrderForm extends React.Component {
             </Tabs>
           </div>
 
-          <div className="col-sm-2">{this.state.logoutButton}</div>
+          <div className="col-sm-2" style={{ float: "right" }}>
+            {this.state.logoutButton}
+          </div>
         </div>
       </React.Fragment>
     );
